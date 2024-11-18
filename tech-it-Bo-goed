@@ -1,0 +1,160 @@
+
+
+CREATE TABLE public.cimodules (
+    cimodulesid integer NOT NULL,
+    provider character varying(100),
+    encoding character varying(50),
+    productid integer
+);
+
+
+
+CREATE TABLE public.mountingmethod (
+    mountingmethod integer NOT NULL,
+    televisionid integer,
+    wallbracketid integer
+);
+
+
+CREATE TABLE public.products (
+    productid integer NOT NULL,
+    name character varying(100),
+    brand character varying(50),
+    price numeric,
+    currentstock integer,
+    datesold date,
+    type character varying
+);
+
+CREATE TABLE public.remotecontroller (
+    remotecontrollerid integer NOT NULL,
+    smart bit(1),
+    baterrytype character varying(50),
+    productid integer,
+    televisionid integer
+);
+
+
+CREATE TABLE public.television (
+    televisionid integer NOT NULL,
+    height numeric,
+    weight numeric,
+    screenquality character varying(50),
+    screentype character varying(50),
+    wifi bit(1),
+    smarttv bit(1),
+    voicecontrol bit(1),
+    hdr bit(1),
+    productid integer,
+    remotecontrollerid integer,
+    cimodulesid integer
+);
+
+
+CREATE TABLE public.users (
+    userid integer NOT NULL,
+    username character varying(50),
+    password character varying(50),
+    adress character varying(50),
+    jobtitle character varying(50),
+    payscale integer,
+    vacationdays integer
+);
+
+
+CREATE TABLE public.wallbracket (
+    wallbracketid integer NOT NULL,
+    adjustable bit(1),
+    height numeric,
+    weight numeric,
+    productid integer
+);
+
+
+INSERT INTRO cimodules (provider, encoding, productid)
+VALUES	(Ziggo, Encoding1, 3)
+
+
+
+INSERT INTRO mountingmethod (televisionid, wallbracketid)
+VALUES	1	1
+
+
+
+INSERT INTRO products (name, brand, price, currentstock, datesold, type)
+VALUES	(TV1, Samsung, 500, 5, 2024-10-11, type1)
+	(Remote1, Samsung, 20, 3, 2024-09-11, type1)
+	(CIModule1, Quantis, 70, 10, 2023-12-11, type1)
+	(Wallbracket1, Vogels, 50, 2, 2020-08-15, type1)
+
+
+
+INSERT INTRO remotecontroller (smart, baterrytype, productid, televisionid)
+VALUES	(0, AAA, 2, 1)
+
+
+
+INSERT INTRO television (height, weight, screenquality, screentype, wifi, smarttv, voicecontrol, hdr, productid, remotecontrollerid, cimodulesid)
+VALUES	(30.5, 4.2, Good, Qled, 1, 1, 0, 1, 1, 1, 1)
+
+
+INSERT INTRO users (username, password, adress, jobtitle, payscale, vacationdays)
+VALUES	(Bo Maassen, Wachtwoord, Adres1, Developer, 8, 25)
+
+
+
+INSERT INTRO wallbracket (adjustable, height, weight, productid)
+VALUES	(0, 50.5, 2.5, 4)
+
+
+ALTER TABLE ONLY public.cimodules
+    ADD CONSTRAINT cimodules_pkey PRIMARY KEY (cimodulesid);
+
+ALTER TABLE ONLY public.mountingmethod
+    ADD CONSTRAINT mountingmethod_pkey PRIMARY KEY (mountingmethod);
+
+ALTER TABLE ONLY public.products
+    ADD CONSTRAINT products_pkey PRIMARY KEY (productid);
+
+ALTER TABLE ONLY public.remotecontroller
+    ADD CONSTRAINT remotecontroller_pkey PRIMARY KEY (remotecontrollerid);
+
+ALTER TABLE ONLY public.television
+    ADD CONSTRAINT television_pkey PRIMARY KEY (televisionid);
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_pkey PRIMARY KEY (userid);
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_username_key UNIQUE (username);
+
+ALTER TABLE ONLY public.wallbracket
+    ADD CONSTRAINT wallbracket_pkey PRIMARY KEY (wallbracketid);
+
+ALTER TABLE ONLY public.cimodules
+    ADD CONSTRAINT cimodules_productid_fkey FOREIGN KEY (productid) REFERENCES public.products(productid);
+
+ALTER TABLE ONLY public.mountingmethod
+    ADD CONSTRAINT mountingmethod_televisionid_fkey FOREIGN KEY (televisionid) REFERENCES public.television(televisionid);
+
+ALTER TABLE ONLY public.mountingmethod
+    ADD CONSTRAINT mountingmethod_wallbracketid_fkey FOREIGN KEY (wallbracketid) REFERENCES public.wallbracket(wallbracketid);
+
+ALTER TABLE ONLY public.remotecontroller
+    ADD CONSTRAINT remotecontroller_productid_fkey FOREIGN KEY (productid) REFERENCES public.products(productid);
+
+ALTER TABLE ONLY public.remotecontroller
+    ADD CONSTRAINT remotecontroller_televisionid_fkey FOREIGN KEY (televisionid) REFERENCES public.television(televisionid);
+
+ALTER TABLE ONLY public.television
+    ADD CONSTRAINT television_cimodulesid_fkey FOREIGN KEY (cimodulesid) REFERENCES public.cimodules(cimodulesid);
+
+ALTER TABLE ONLY public.television
+    ADD CONSTRAINT television_productid_fkey FOREIGN KEY (productid) REFERENCES public.products(productid);
+
+ALTER TABLE ONLY public.television
+    ADD CONSTRAINT television_remotecontrollerid_fkey FOREIGN KEY (remotecontrollerid) REFERENCES public.remotecontroller(remotecontrollerid);
+
+ALTER TABLE ONLY public.wallbracket
+    ADD CONSTRAINT wallbracket_productid_fkey FOREIGN KEY (productid) REFERENCES public.products(productid);
+
